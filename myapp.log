@@ -1,0 +1,102 @@
+INFO:root:[('agtagents', ), ('agtagenttypes', ), ('agtresearchagents', ), ('chrancestries', ), ('chrattributes', ), ('chrbloodlines', ), ('chrfactions', ), ('chrraces', ), ('crpactivities', ), ('crpnpccorporationdivisions', ), ('crpnpccorporationresearchfields', ), ('crpnpccorporations', ), ('crpnpccorporationtrades', ), ('crpnpcdivisions', ), ('crtcertificates', ), ('crtcertificateskills', ), ('crtmasteries', ), ('crtrecommendedtypes', ), ('dgmattributecategories', ), ('dgmattributetypes', ), ('dgmeffects', ), ('dgmeffectsmodifierinfo', ), ('dgmexpressions', ), ('dgmtypeattributes', ), ('dgmtypeeffects', ), ('evegraphics', ), ('eveicons', ), ('eveunits', ), ('industryactivities', ), ('industryactivitymaterials', ), ('industryactivityproducts', ), ('industryactivityskills', ), ('industryblueprints', ), ('invcategories', ), ('invcontrabandtypes', ), ('invcontroltowerresourcepurposes', ), ('invcontroltowerresources', ), ('invflags', ), ('invgroups', ), ('invitems', ), ('invmarketgroups', ), ('invmetatypes', ), ('invnames', ), ('invpositions', ), ('invtraits', ), ('invtypematerials', ), ('invtypereactions', ), ('invtypes', ), ('invuniquenames', ), ('mapcelestialstatistics', ), ('mapconstellations', ), ('mapdenormalize', ), ('mapdisallowedanchorcategories', ), ('mapdisallowedanchorgroups', ), ('mapitemeffectbeacons', ), ('mapjumps', ), ('maplandmarks', ), ('maplocationscenes', ), ('maplocationwormholeclasses', ), ('mapregions', ), ('mapsolarsystems', ), ('mapuniverse', ), ('planetschematics', ), ('planetschematicspinmap', ), ('planetschematicstypemap', ), ('ramactivities', ), ('ramassemblylinestations', ), ('ramassemblylinetypedetailpercategory', ), ('ramassemblylinetypedetailpergroup', ), ('ramassemblylinetypes', ), ('raminstallationtypecontents', ), ('skinlicenses', ), ('skinmaterials', ), ('skins', ), ('staoperations', ), ('staoperationservices', ), ('staservices', ), ('stastations', ), ('stastationtypes', ), ('tnttournamentbannedgroups', ), ('tnttournamentbannedtypes', ), ('tnttournamentgrouppoints', ), ('tnttournaments', ), ('tnttournamenttypepoints', ), ('warcombatzones', ), ('warcombatzonesystems', )]
+INFO:root:grabbing file data at C:\Users\christopher\Documents\EVE\logs\Marketlogs
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Chromodynamic Tricarboxyls-2019.08.24 000442.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.23 234559.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.24 000433.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Megacyte-2019.08.24 000425.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Mexallon-2019.08.24 000418.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Morphite-2019.08.24 000408.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Nocxium-2019.08.24 000401.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Pyerite-2019.08.24 000354.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Tritanium-2019.08.24 000246.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.24 000255.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.24 000346.txt
+INFO:root:Writing sql file.
+INFO:root:Completing importation of Eve Market data.
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Chromodynamic Tricarboxyls-2019.08.24 000442.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.23 234559.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.24 000433.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Megacyte-2019.08.24 000425.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Mexallon-2019.08.24 000418.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Morphite-2019.08.24 000408.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Nocxium-2019.08.24 000401.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Pyerite-2019.08.24 000354.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Tritanium-2019.08.24 000246.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.24 000255.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.24 000346.txt
+INFO:root:Writing sql file.
+INFO:root:Completing importation of Eve Market data.
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Chromodynamic Tricarboxyls-2019.08.24 000442.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.23 234559.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.24 000433.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Megacyte-2019.08.24 000425.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Mexallon-2019.08.24 000418.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Morphite-2019.08.24 000408.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Nocxium-2019.08.24 000401.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Pyerite-2019.08.24 000354.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Tritanium-2019.08.24 000246.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.24 000255.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.24 000346.txt
+INFO:root:Writing sql file.
+INFO:root:Completing importation of Eve Market data.
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Chromodynamic Tricarboxyls-2019.08.24 000442.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.23 234559.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.24 000433.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Megacyte-2019.08.24 000425.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Mexallon-2019.08.24 000418.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Morphite-2019.08.24 000408.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Nocxium-2019.08.24 000401.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Pyerite-2019.08.24 000354.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Tritanium-2019.08.24 000246.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.24 000255.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.24 000346.txt
+INFO:root:Writing sql file.
+INFO:root:Completing importation of Eve Market data.
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Chromodynamic Tricarboxyls-2019.08.25 003056.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.25 003102.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Megacyte-2019.08.25 003108.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Mexallon-2019.08.25 003114.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Morphite-2019.08.25 003119.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Nocxium-2019.08.25 003124.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Pyerite-2019.08.25 003129.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Tritanium-2019.08.25 003134.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.25 003139.txt
+INFO:root:Writing sql file.
+INFO:root:Completing importation of Eve Market data.
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Chromodynamic Tricarboxyls-2019.08.26 135938.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.26 135947.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Megacyte-2019.08.26 135951.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Mexallon-2019.08.26 135955.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Morphite-2019.08.26 135958.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Nocxium-2019.08.26 140002.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Pyerite-2019.08.26 140006.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Tritanium-2019.08.26 140010.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.26 140014.txt
+INFO:root:Writing sql file.
+INFO:root:Completing importation of Eve Market data.
+INFO:root:grabbing file data at C:\Users\chris\Documents\EVE\logs\Marketlogs
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Chromodynamic Tricarboxyls-2019.08.27 123605.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Isogen-2019.08.27 123616.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Megacyte-2019.08.27 123620.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Mexallon-2019.08.27 123624.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Morphite-2019.08.27 123628.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Nocxium-2019.08.27 123631.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Pyerite-2019.08.27 123635.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Tritanium-2019.08.27 123638.txt
+INFO:root:Importing: C:\Users\chris\Documents\EVE\logs\Marketlogs/Everyshore-Zydrine-2019.08.27 123643.txt
+INFO:root:Writing sql file.
+INFO:root:Completing importation of Eve Market data.
