@@ -501,7 +501,7 @@ class Evesqlimporter:
         self.executesqllist(sqllinelist, self.cursor)
 ##        self.win.destroy()
 ##renamefilestobackup()
-cnxn = pyodbc.connect('DRIVER={MySQL ODBC 3.51 Driver};SERVER=localhost;DATABASE=testdb;UID=root;PWD=admin')
+cnxn = pyodbc.connect('DRIVER={MySQL ODBC 3.51 Driver};SERVER=localhost;DATABASE=testdb;UID=root;PWD=youpassword')
 cursor = cnxn.cursor()
 eimporter = Evesqlimporter(INISETTINGS,cursor,cnxn)
 eimporter.run()
