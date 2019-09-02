@@ -90,7 +90,7 @@ class Evedbimporter:
                 return True
         return False
 
-    def settabledrop(self, tablename, sqltypecont, colids):
+    def settabledrop(self, tablename, sqltypecont, colids, dropTrue = False):
         tablexist = True
         try:
             execline = "Select * from "
@@ -112,7 +112,7 @@ class Evedbimporter:
                         writeline += " "
                         writeline += "datetime"
                         writeline += ", "
-                    elif 'range' in colid:
+                    elif 'range' == colid:
                         writeline += "ranger"
                         writeline += " "
                         writeline += "bigint"
@@ -143,13 +143,64 @@ class Evedbimporter:
             self.cnxn.commit()
             print('Added table successfully!')
         else:
-            print('Dropping table.')
-            self.cursor.execute('DROP TABLE ' + tablename + ';')
-            self.cnxn.commit()
-            print('Dropped table.')
+            print('table exists.')
+            if dropTrue:
+                print('Dropping table.')
+                self.cursor.execute('DROP TABLE ' + tablename + ';')
+                self.cnxn.commit()
+                print('Dropped table.')
 
+    def insertDatatoTable(self, tablename, colitems):
+        def escapeSingleQuote(val):
+            if "'" in val:
+                return val.replace("'", "''")
+            return val
+        
+        for colitem in colitems:
+            i = 0
+            writeline = "INSERT INTO " + tablename + "("
+            for key in colitem:
+                writeline += str(key)
+                if i < len(colitem) - 1:
+                    writeline += ","
+                else:
+                    writeline += ")"
+                i+=1
+            i = 0
+            writeline += " VALUES('"
+            for key in colitem:
+                
+                if colitem[key] == 'True':
+                    writeline += "b'1',"
+                elif colitem[key] == 'False':
+                    writeline += "b'0',"
+                else:
+                    if str(colitem[key]) != "''":
+                        rval = escapeSingleQuote(str(colitem[key]))
+                        writeline += rval 
+                if i < len(colitem)-1:
+                    writeline += "','"
+                else:
+                    writeline += "');"
+                i+=1
+            print(writeline)    
+            self.cursor.execute(writeline)
+            self.cnxn.commit()
+            
 
     def readYamlfile(self, filename):
+        def checkID(val):
+            if " " in val.lstrip().strip():
+                return True
+            return False
+        def checkIndentLevel(val, targetlevel, addcount = 0):
+            ilvl = len(val)+addcount - len(val.lstrip())
+            if ilvl - targetlevel > 0:
+                return True
+            return False
+        def getTargetilevel(val, addcount = 0):
+            return len(val)+addcount - len(val.lstrip())
+
         print (filename)
         file = open(filename, 'rU')
         colids = []
@@ -166,15 +217,19 @@ class Evedbimporter:
                      "C:\\Users\\chris\\Downloads\sde-20190625-TRANQUILITY (1)\\sde\\bsd\\chrFactions.yaml",
                      "C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)\\sde\\fsd\\tournamentRuleSets.yaml"]
         if filename in noReadlist:
-            return [[],[]]
+            return [[],[],0]
+        targetlevel = 0
         for line in file:
+            
             if self.testhlead(line) and i == 0:
                 linedat = line.split('-')
+                targetlevel = getTargetilevel(linedat[1], 1)
                 rID = linedat[1].split(':')[0].lstrip()
                 if self.testInt(rID):
-                    return [[],[]]
+                    return [[],[], 0]
                 ritem = linedat[1].split(':')[1].lstrip().strip()
                 print(ritem)
+                print(targetlevel)
                 colids.append(rID)
                 colitems.append({rID: ritem}) 
             elif self.testhlead(line) and not colidsDone:
@@ -193,9 +248,14 @@ class Evedbimporter:
                 #colids.append(rID)
                 colitems.append({rID: ritem})                 
             elif not self.testhlead(line) and not colidsDone:
+                if checkIndentLevel(line, targetlevel):
+                    continue
                 if ':' not in line:
                     continue
+
                 rID = line.split(':')[0].lstrip()
+                if checkID(rID):
+                    continue
                 ritem = line.split(':')[1].lstrip().strip()
                 if not self.teststr(rID):
                     print(rID)
@@ -204,10 +264,13 @@ class Evedbimporter:
                 colids.append(rID)
                 colitems[len(colitems)-1][rID] = ritem 
             else:
+                if checkIndentLevel(line, targetlevel):
+                    continue
                 if ':' not in line:
                     continue
                 rID = line.split(':')[0].lstrip()
-                
+                if checkID(rID):
+                    continue
                 #colids.append(rID)
                 ritem = line.split(':')[1].lstrip().strip()
                 if not self.teststr(rID):
@@ -217,9 +280,27 @@ class Evedbimporter:
                 #colids.append(rID)
                 colitems[len(colitems)-1][rID] = ritem                                
             i+=1
-        #print(colids)
+        maxcol = 0
+        maxindx = []
+        if len(colitems) > 0:
+            maxinds = colitems[0]
+        i = 0 
+        for colitem in colitems:
+            for key in colitem:
+                if key not in colids:
+                    colids.append(key)
+                    maxinds[key] = colitem[key]
+            # if len(colitem) > maxcol:
+            #     maxcol = len(colitem)
+            #     maxind = i
+            #     ncolids = []
+            #     for key in colitem:
+            #         ncolids.append(key)
+            #     colids = ncolids
+            i += 1
+        print(colids)
         #print(colitems)
-        return (colids,colitems)
+        return (colids,colitems, maxinds)
 
     def setINISETTINGS(self, settings):
         global INISETTINGS
@@ -229,25 +310,28 @@ class Evedbimporter:
         
         dirpath = INISETTINGS['DIRPATH']
 
-    def setup(self):
+    def setup(self, dropTrue = False, skipInsert = False):
         filenames = self.getfiles()
         colids = []
         for filename in filenames:
             tbn = filename.split('\\')
             tablename = tbn[len(tbn)-1].split('.yaml')[0]
-            colids, colitems = self.readYamlfile(filename)
+            colids, colitems, colindex = self.readYamlfile(filename)
             if len(colids) == 0:
                 continue
             typecont = []
-            tcolids = colitems[0]
+            tcolids = colindex
             for colid in tcolids:
                 colobj = self.converttype(tcolids[colid])
                 typecont.append(colobj)
             print(typecont)
             sqltypecont = self.setsqltypecont(typecont)
             print(sqltypecont)
-            self.settabledrop(tablename, sqltypecont, colids)
+            self.settabledrop(tablename, sqltypecont, colids, dropTrue)
             print(colids)
+            if skipInsert:
+                continue
+            self.insertDatatoTable(tablename, colitems)
         #print(colids)
 
     def __init__(self, settings, cursor, cnxn):
@@ -258,7 +342,7 @@ class Evedbimporter:
         self.cursor = cursor
         print (self.getfiles())
 
-cnxn = pyodbc.connect('DRIVER={MySQL ODBC 3.51 Driver};SERVER=localhost;DATABASE=testdb;UID=root;PWD=*****')
+cnxn = pyodbc.connect('DRIVER={MySQL ODBC 3.51 Driver};SERVER=localhost;DATABASE=testdb;UID=root;PWD=****')
 cursor = cnxn.cursor()
 eimporter = Evedbimporter(INISETTINGS,cursor,cnxn)
 eimporter.setup()
