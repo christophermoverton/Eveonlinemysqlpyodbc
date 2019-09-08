@@ -6,13 +6,14 @@ import logging
 
 reactionmaterials = ['Amber Cytoserocin', 'Amber Mykoserocin',
                      'Atmospheric Gases', 'Azure Cytoserocin',
-                     'Azure Mykoserocin', 'Black Morphite',
+                     'Azure Mykoserocin', 'Bacteria', 'Biofuels', 'Biomass','Black Morphite',
                      'C3-FTM Acid', 'Cadmium', 'Caesarium Cadmide',
                      'Caesium', 'Carbon Polymers', 'Carbon-86 Epoxy Resin',
                      'Celadon Cytoserocin', 'Celadon Mykoserocin',
-                     'Ceramic Powder', 'Chromium', 'Cobalt',
+                     'Ceramic Powder', 'Chiral Sturctures', 'Chromodynamic Tricarboxyls',
+                     'Chromium', 'Cobalt',
                      'Crystalline Carbonide', 'Crystallite Alloy',
-                     'Dysporite', 'Dysprosium', 'Evaporite Deposits',
+                     'Dysporite', 'Dysprosium', 'Electrolytes','Evaporite Deposits',
                      'Fermionic Condensates', 'Fernite Alloy',
                      'Fernite Carbide', 'Ferrofluid', 'Ferrogel',
                      'Fluxed Condensates', 'Freedom Fighters',
@@ -23,17 +24,21 @@ reactionmaterials = ['Amber Cytoserocin', 'Amber Mykoserocin',
                      'Fulleroferrocene', 'Fullero-Ferrocene', 'Garbage',
                      'generic item 4', 'generic item 6', 'Golden Cytoserocin',
                      'Golden Mykoserocin', 'Graphene Nanoribbons', 'Hafnium',
+                     'Heavy Water', 'Helium Isotopes', 'Hydrogen Isotopes',
                      'Hexite', 'Hydrocarbons', 'Hydrochloric Acid',
                      'Hyperflurite', 'Hypersynaptic Fibers', 'Isogen',
                      'Lanthanum Metallofullerene', 'Lime Cytoserocin',
-                     'Lime Mykoserocin', 'Malachite Cytoserocin',
+                     'Lime Mykoserocin', 'Liquid Ozone','Malachite Cytoserocin',
                      'Malachite Mykoserocin', 'Megacyte', 'Mercury',
                      'Methanofullerene', 'Mexallon', 'Morphite',
-                     'Nanobud Polymers', 'Nanotori Polymers',
+                     'Nanobud Polymers', 'Nanotori Polymers','Nitrogen Isotopes',
                      'Nanotransistors', 'Neo Mercurite', 'Neodymium',
-                     'Nocxium', 'Oxygen', 'Phenolic Composites', 'Platinum',
+                     'Nocxium', 'Oxidizing Compound', 'Oxygen', 'Oxygen Isotopes', 
+                     'Phenolic Composites', 'Plasmoids',
+                     'Platinum', 'Proteins',
                      'Platinum Technite', 'Plutonium Metallofullerene',
                      'Polyfullerene Condensate', 'PPD Fullerene Fibers',
+                     'Precious Metals', 
                      'Promethium', 'Prometium',
                      'Pure Improved Blue Pill Booster',
                      'Pure Improved Crash Booster',
@@ -67,12 +72,12 @@ reactionmaterials = ['Amber Cytoserocin', 'Amber Mykoserocin',
                      'Pure Synth Mindflood Booster',
                      'Pure Synth Sooth Sayer Booster',
                      'Pure Synth X-Instinct Booster',
-                     'Pyerite', 'Rolled Tungsten Alloy',
+                     'Pyerite', 'Reactive Metals', 'Rolled Tungsten Alloy',
                      'Scandium', 'Scandium Metallofullerene',
-                     'Silicates', 'Silicon Diborite', 'Slaves', 'Solerium',
-                     'Spirits', 'Sulfuric Acid', 'Sylramic Fibers',
+                     'Silicates', 'Silicon','Silicon Diborite', 'Slaves', 'Solerium',
+                     'Spirits', 'Strontium Clathrates','Sulfuric Acid', 'Sylramic Fibers',
                      'Technetium', 'Thulium', 'Titanium', 'Titanium Carbide',
-                     'Titanium Chromide', 'Tritanium', 'Tungsten',
+                     'Titanium Chromide', 'Toxic Metals','Tritanium', 'Tungsten',
                      'Tungsten Carbide', 'Unrefined Dysporite',
                      'Unrefined Ferrofluid', 'Unrefined Fluxed Condensates',
                      'Unrefined Hyperflurite', 'Unrefined Neo Mercurite',
@@ -94,15 +99,27 @@ sqlimportfilename = 'EVEsqlimport'
 class Evesqlimporter:
 
     def retrieveReactionMaterials(self):
-        query = "Select DISTINCT a.typeName FROM  invTypes a,"
+        query = "Select DISTINCT a.name FROM  typeIDs a,"
         query += " invTypeReactions b WHERE b.typeID = a.typeID "
-        query += "ORDER BY a.typeName ASC;"
+        query += "ORDER BY a.name ASC;"
         reactionmaterials = []
         try:
             self.cursor.execute(query)
             rows = self.cursor.fetchall()
             for row in rows:
-                reactionmaterials.append(row.typeName)
+                reactionmaterials.append(row.name)
+        except:
+            print('Unable to get reaction materials used for tablename construct.')
+
+        query = "Select DISTINCT a.name FROM  typeIDs a,"
+        query += " planetSchematicsTypeMap b WHERE b.typeID = a.typeID "
+        query += "ORDER BY a.name ASC;"
+
+        try:
+            self.cursor.execute(query)
+            rows = self.cursor.fetchall()
+            for row in rows:
+                reactionmaterials.append(row.name)
         except:
             print('Unable to get reaction materials used for tablename construct.')
             
@@ -478,7 +495,8 @@ class Evesqlimporter:
             tablename, batchdate = self.filenameparser(filename)
             sqllines, tablename = self.readfilesetimport(filename,
                                                          tablename, batchdate)
-            print(sqllines)                                             
+            print(sqllines)  
+            print(tablename)                                           
             if not self.tableexist(self.cursor, tablename):
                 typecont, colids = self.returntypescsvlinedata(filename)
                 print(len(typecont),len(colids))
@@ -491,7 +509,7 @@ class Evesqlimporter:
             msg = 'Importing: ' + filename
             self.writeToLog(msg)
             print('Importing: ' , filename)
-        self.writesqlfile(sqllinelist)
+        #self.writesqlfile(sqllinelist)
 ##        self.p['value'] += inc2
         msg = 'Writing sql file.'
         self.writeToLog(msg)
