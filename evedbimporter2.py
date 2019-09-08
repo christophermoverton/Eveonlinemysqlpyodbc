@@ -261,7 +261,7 @@ class Evedbimporter2:
                 #colids.append(rID)
                 colitems.append({"typeID": rID})
                 colidsDone = True
-            elif self.testhlead(line,i) and colidsDone:
+            elif self.testhlead(line) and colidsDone:
                 rID = getleadID(line)
                 targetlevel = 4
                # print(linedat)
@@ -278,10 +278,12 @@ class Evedbimporter2:
                 rID = line.split(':')[0].lstrip()
                 if checkID(rID):
                     continue
-                ritem = line.split(':')[1].lstrip().strip()
-                if ritem == '':
+                ritem = line.split('\n')[0].split(':')[1].lstrip().strip()
+                if ritem == '' and rID != 'masteries':
                     lastID = rID
                     targetlevel = 8
+                if rID == 'masteries':
+                    continue
             
                 if targetlevel == 8:
                     if rID == 'en':
@@ -304,10 +306,12 @@ class Evedbimporter2:
                 if checkID(rID):
                     continue
                 #colids.append(rID)
-                ritem = line.split(':')[1].lstrip().strip()
-                if ritem == '':
+                ritem = line.split('\n')[0].split(':')[1].lstrip().strip()
+                if ritem == '' and rID != 'masteries':
                     lastID = rID
                     targetlevel = 8
+                if rID == 'masteries':
+                    continue
                 if not self.teststr(rID):
                     print(rID)
                     break
@@ -370,7 +374,9 @@ class Evedbimporter2:
             print(sqltypecont)
             self.settabledrop(tablename, sqltypecont, colids, dropTrue)
             print(colids)
-            print(colitems[0:110])
+            print(len(colitems))
+            print(colitems[len(colitems)-1])
+            #print(colitems[0:110])
             if skipInsert:
                 continue
             self.insertDatatoTable(tablename, colitems)
