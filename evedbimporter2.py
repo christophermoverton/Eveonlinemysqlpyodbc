@@ -4,7 +4,7 @@ import pyodbc
 import logging
 
 importdir = "C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)\\sde\\fsd\\"
-filestoadd = ["typeIDs.yaml"]
+filestoadd = ['blueprints.yaml']##"typeIDs.yaml"]
 languagetoimport = "en"
 
 INISETTINGS = {'DIRPATH':importdir, 'BACKUPPATH': '',
@@ -203,7 +203,12 @@ class Evedbimporter2:
             self.cnxn.commit()
             
 
-    def readYamlfile(self, filename):
+    def readYamlfile(self, filename, readflag = 0):
+        def hyphentest(val):
+            if '- ' in val.lstrip():
+                return True
+            return False
+
         def getleadID(val):
             lsplit = val.split(' ')
             for lsp in lsplit:
@@ -222,6 +227,66 @@ class Evedbimporter2:
             return False
         def getTargetilevel(val, addcount = 0):
             return len(val)+addcount - len(val.lstrip())
+        
+        def getLevelDict(keyIDs, colitems):
+            colitemd = colitems[len(colitems)-1]
+            for keyid in keyIDs:
+                colitemd = colitemd[keyid]
+            return colitemd
+
+        def sethyphendict(wdict, rID, ritem, newEntry = False):
+            
+            if newEntry:
+                wdict[len(wdict)] = {rID:ritem}
+            else:
+                wdict[len(wdict)-1][rID] = ritem
+
+        def setkeyIDs(keyIDs, linev, targetlevel, hlevel):
+            linelvl = getTargetilevel(linev)
+            if targetlevel - linelvl > 0:
+                ntlvl = targetlevel
+                ntlvl -= 4
+                nkeyIDs = keyIDs[0: len(keyIDs)-1]
+                return [ntlvl, nkeyIDs, False]
+            return [targetlevel, keyIDs, hlevel]
+        
+        def buildSingleLevelEntries(colitemd, writed = [{}], ikey = '', lastlevel = 0):
+            for key in colitemd:
+                if type(colitemd[key]) == dict:
+                    if type(key) == str:
+                        newikey = ikey
+                        if ikey == '':
+                            newikey = key
+                        else:
+                            newikey += '_'+key
+                        buildSingleLevelEntries(colitemd[key], writed,newikey, 1)
+                    elif type(key) == int:
+                        ndict = colitemd[key]
+                        i = 0
+                        for nkey in ndict:
+                            nikey = ikey + '_'+ nkey
+                            n2dict = {}
+                            if i == 0:
+                                n2dict = writed[0].copy()
+                            else:
+                                n2dict = writed[len(writed)-1].copy()
+                            n2dict[nikey] = ndict[nkey]
+                            if i == len(ndict)-1:
+                                writed[len(writed)-1] = n2dict
+                            else:
+                                writed.append(n2dict)
+                            i +=1
+                else:
+                    wkey = ikey 
+                    if lastlevel == 0:
+                        wkey = key
+                    else:
+                        #ikey += '_'+key
+                        wkey = ikey + '_' + key
+                    writed[0][wkey] = colitemd[key]
+
+
+
 
         print (filename)
         file = open(filename, encoding='utf-8', mode='rU')
@@ -240,8 +305,9 @@ class Evedbimporter2:
         if filename in noReadlist:
             return [[],[],0]
         targetlevel = 0
+        hlevel = False
         lastID = ''
-        
+        lastIDs = []
         for line in file:
             
             if self.testhlead(line) and i == 0:
@@ -253,7 +319,8 @@ class Evedbimporter2:
                 ##print(ritem)
                 print(targetlevel)
                 colids.append("typeID")
-                colitems.append({"typeID": rID}) 
+                colitems.append({"typeID": rID})
+                #lastIDs.append(rID) 
             elif self.testhlead(line) and not colidsDone:
                 rID = getleadID(line)
                # print(linedat)
@@ -261,6 +328,7 @@ class Evedbimporter2:
                 #colids.append(rID)
                 colitems.append({"typeID": rID})
                 colidsDone = True
+                lastIDs = []
             elif self.testhlead(line) and colidsDone:
                 rID = getleadID(line)
                 targetlevel = 4
@@ -268,65 +336,117 @@ class Evedbimporter2:
                 #rID = linedat[1].split(':')[0].lstrip()
                 #ritem = linedat[1].split(':')[1].lstrip().strip()
                 #colids.append(rID)
-                colitems.append({"typeID": rID})                 
+                colitems.append({"typeID": rID})
+                lastIDs = []                 
             elif not self.testhlead(line) and not colidsDone:
-                if checkIndentLevel(line, targetlevel):
-                    continue
-                if ':' not in line:
-                    continue
 
-                rID = line.split(':')[0].lstrip()
-                if checkID(rID):
-                    continue
-                ritem = line.split('\n')[0].split(':')[1].lstrip().strip()
-                if ritem == '' and rID != 'masteries':
-                    lastID = rID
-                    targetlevel = 8
-                if rID == 'masteries':
-                    continue
-            
-                if targetlevel == 8:
-                    if rID == 'en':
-                        rID = lastID
-                        targetlevel = 4
-                    else:
-                        continue
-                if not self.teststr(rID):
-                    print(rID)
-                    break
-                    #return [[],[]]
-                colids.append(rID)
-                colitems[len(colitems)-1][rID] = ritem 
-            else:
-                if checkIndentLevel(line, targetlevel):
-                    continue
                 if ':' not in line:
                     continue
-                rID = line.split(':')[0].lstrip()
+                lr = line.replace(' - ', '   ')
+                rID = lr.split(':')[0].lstrip()
+                if checkID(rID):
+                    continue
+                ritem = line.split('\n')[0].split(':')[1].lstrip().strip()
+                if (readflag == 1):  ## reading blueprints
+                    ## set target level and keyIDs
+                    
+                    targetlevel, lastIDs, hlevel = setkeyIDs(lastIDs, lr, targetlevel, hlevel)
+                    dwrite = getLevelDict(lastIDs, colitems)
+                    
+                    if ritem == '':
+                        lastIDs.append(rID)
+                        dwrite[rID] = {}
+                        targetlevel += 4
+                    else:
+                        if hyphentest(line):
+                            sethyphendict(dwrite, rID, ritem, True)
+                            hlevel = True
+                        elif hlevel and not hyphentest(line):
+                            sethyphendict(dwrite, rID, ritem)
+                        elif not hlevel and not hyphentest(line):
+                            dwrite[rID] = ritem
+                
+
+                else:
+                    if checkIndentLevel(line, targetlevel):
+                        continue
+                    if ritem == '' and rID != 'masteries':
+                        lastID = rID
+                        targetlevel = 8
+                    if rID == 'masteries':
+                        continue
+                
+                    if targetlevel == 8:
+                        if rID == 'en':
+                            rID = lastID
+                            targetlevel = 4
+                        else:
+                            continue
+                    if not self.teststr(rID):
+                        print(rID)
+                        break
+                        #return [[],[]]
+                    colids.append(rID)
+                    colitems[len(colitems)-1][rID] = ritem 
+            else:
+
+                if ':' not in line:
+                    continue
+                lr = line.replace(' - ', '   ') ## 
+                rID = lr.split(':')[0].lstrip()
                 if checkID(rID):
                     continue
                 #colids.append(rID)
                 ritem = line.split('\n')[0].split(':')[1].lstrip().strip()
-                if ritem == '' and rID != 'masteries':
-                    lastID = rID
-                    targetlevel = 8
-                if rID == 'masteries':
-                    continue
-                if not self.teststr(rID):
-                    print(rID)
-                    break
-                if targetlevel == 8:
-                    if rID == 'en':
-                        rID = lastID
-                        targetlevel = 4
+                if (readflag == 1):  ## reading blueprints
+                    ## set target level and keyIDs
+
+                    targetlevel, lastIDs, hlevel = setkeyIDs(lastIDs, lr, targetlevel, hlevel)
+                    dwrite = getLevelDict(lastIDs, colitems)
+                    
+                    if ritem == '':
+                        lastIDs.append(rID)
+                        dwrite[rID] = {}
+                        targetlevel += 4
                     else:
+                        if hyphentest(line):
+                            sethyphendict(dwrite, rID, ritem, True)
+                            hlevel = True
+                        elif hlevel and not hyphentest(line):
+                            sethyphendict(dwrite, rID, ritem)
+                        elif not hlevel and not hyphentest(line):
+                            dwrite[rID] = ritem
+                else:
+                    if checkIndentLevel(line, targetlevel):
                         continue
-                    #return [[],[]]
-                #colids.append(rID)
-                colitems[len(colitems)-1][rID] = ritem                                
+                    if ritem == '' and rID != 'masteries':
+                        lastID = rID
+                        targetlevel = 8
+                    if rID == 'masteries':
+                        continue
+                    if not self.teststr(rID):
+                        print(rID)
+                        break
+                    if targetlevel == 8:
+                        if rID == 'en':
+                            rID = lastID
+                            targetlevel = 4
+                        else:
+                            continue
+                        #return [[],[]]
+                    #colids.append(rID)
+                    colitems[len(colitems)-1][rID] = ritem                                
             i+=1
         maxcol = 0
         maxindx = []
+        ncolitems = []
+        if readflag == 1:
+            ## need to flatten dictionary values
+            for colitem in colitems:
+                writed = [{}]
+                buildSingleLevelEntries(colitem,writed)
+                ncolitems = ncolitems + writed
+        colitems = ncolitems[0:len(ncolitems)]
         if len(colitems) > 0:
             maxinds = colitems[0]
         i = 0 
@@ -361,7 +481,10 @@ class Evedbimporter2:
         for filename in filenames:
             tbn = filename.split('\\')
             tablename = tbn[len(tbn)-1].split('.yaml')[0]
-            colids, colitems, colindex = self.readYamlfile(filename)
+            readFlag = 0
+            if tablename == 'blueprints':
+                readFlag = 1
+            colids, colitems, colindex = self.readYamlfile(filename,readFlag)
             if len(colids) == 0:
                 continue
             typecont = []
