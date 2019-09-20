@@ -14,6 +14,6 @@ Instructions:
 To setup database, you will want to set up your MySQL database, and adjust Evedbimporter.py and Evedbimporter.py files according to login credentials, set locally configuration path to the your Eve developers kit download directory (assumed unzipped).  (For instance, my path directory is ""C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)")
 First run Evedbimporter.py script (sets up bsd tables)
 Then run Evedbimporter2.py script (sets up typeIDs table)...I still have to work on parsing other fsd directory tables.  typeIDs import has an exclusion on 'masteries'...
-Fsd table imports now include typeIDs table and blueprints, certificates, graphicIDs, groupIDs table.  
+Fsd table imports now include typeIDs, blueprints, certificates, graphicIDs, groupIDs table.  
 
 Single line text strings for a given row are only imported for given row/column values at the moment. 
