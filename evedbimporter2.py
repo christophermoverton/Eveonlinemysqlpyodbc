@@ -4,7 +4,7 @@ import pyodbc
 import logging
 
 importdir = "C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)\\sde\\fsd\\"
-filestoadd = ['graphicIDs.yaml']#'certificates.yaml']#'blueprints.yaml']##"typeIDs.yaml"]
+filestoadd = ['groupIDs.yaml']#'graphicIDs.yaml']#'certificates.yaml']#'blueprints.yaml']##"typeIDs.yaml"]
 languagetoimport = "en"
 
 INISETTINGS = {'DIRPATH':importdir, 'BACKUPPATH': '',
@@ -381,7 +381,6 @@ class Evedbimporter2:
         i = 0
         noReadlist = ["C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)\\sde\\bsd\\trnTranslations.yaml",
                      "C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)\\sde\\fsd\\categoryIDs.yaml",
-                     "C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)\\sde\\fsd\\groupIDs.yaml",
                      "C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)\\sde\\bsd\\chrAncestries.yaml",
                      "C:\\Users\\chris\\Downloads\sde-20190625-TRANQUILITY (1)\\sde\\bsd\\chrAttributes.yaml",
                      "C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)\\sde\\bsd\\chrBloodlines.yaml",
@@ -435,7 +434,7 @@ class Evedbimporter2:
                 colitems.append({"typeID": rID})
                 lastIDs = []                 
             elif not self.testhlead(line) and not colidsDone:
-                rflist = [2,3]
+                rflist = [2,3,4]
                 if not readflag in rflist:
                     if ':' not in line:
                         continue
@@ -560,7 +559,7 @@ class Evedbimporter2:
                     colids.append(rID)
                     colitems[len(colitems)-1][rID] = ritem 
             else:
-                rflist = [2,3]
+                rflist = [2,3,4]
                 if not readflag in rflist:
                     if ':' not in line:
                         continue
@@ -733,6 +732,7 @@ class Evedbimporter2:
         readlist = ['blueprints']
         readlist2 = ['certificates']
         readlist3 = ['graphicIDs']
+        readlist4 = ['groupIDs']
         for filename in filenames:
             tbn = filename.split('\\')
             tablename = tbn[len(tbn)-1].split('.yaml')[0]
@@ -743,6 +743,8 @@ class Evedbimporter2:
                 readFlag = 2
             elif tablename in readlist3:
                 readFlag = 3
+            elif tablename in readlist4:
+                readFlag = 2
             colids, colitems, colindex = self.readYamlfile(filename,readFlag)
             if len(colids) == 0:
                 continue
