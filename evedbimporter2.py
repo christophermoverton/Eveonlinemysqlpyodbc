@@ -4,11 +4,11 @@ import pyodbc
 import logging
 
 importdir = "C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)\\sde\\fsd\\"
-filestoadd = ['iconIDs.yaml']#'groupIDs.yaml']#'graphicIDs.yaml']#'certificates.yaml']#'blueprints.yaml']##"typeIDs.yaml"]
+filestoadd = ['skins.yaml']#'skinMaterials.yaml']#'skinLicenses.yaml']#'iconIDs.yaml']#'groupIDs.yaml']#'graphicIDs.yaml']#'certificates.yaml']#'blueprints.yaml']##"typeIDs.yaml"]
 languagetoimport = "en"
 
 INISETTINGS = {'DIRPATH':importdir, 'BACKUPPATH': '',
-               'SERVER': '', 'DATABASE': '', 'USERID': '', 'PASSWORD':''}
+               'SERVER': '', 'DATABASE': '', 'USERID': '', 'PASSWORD':'', 'Maxcharlen':500}
 
 class Evedbimporter2:
 
@@ -36,7 +36,7 @@ class Evedbimporter2:
             if type(typei) is int:
                 sqltypecont.append('bigint')
             elif type(typei) is str:
-                sqltypecont.append('nvarchar(500)')
+                sqltypecont.append('nvarchar(1000)')
             elif type(typei) is bool:
                 sqltypecont.append('bit')
             elif type(typei) is float:
@@ -470,13 +470,17 @@ class Evedbimporter2:
                     targetlevel, lastIDs, hlevel = setkeyIDs2(lastIDs, lr, targetlevel, hlevel)
                     dwrite = getLevelDict(lastIDs, colitems)
                     tvar = ''
+                    tvarlist = ['description', 'recommendedFor','types']
+                    rIDlist = ['description','skinDescription']
                     if len(lastIDs) > 0:
                         tvar = lastIDs[len(lastIDs)-1]
                     print(targetlevel)
-                    if ritem == '' and not rID == 'description' and not tvar == 'description' and not tvar == 'recommendedFor':
+                    print(rID)
+                    if ritem == '' and not rID in rIDlist and not tvar in tvarlist:
                         lastIDs.append(rID)
                         dwrite[rID] = {}
-                        if rID == 'recommendedFor':
+                        rIDlist = ['recommendedFor', 'types']
+                        if rID in rIDlist:
                             targetlevel += 2
                         else:
                             targetlevel += 4
@@ -495,11 +499,15 @@ class Evedbimporter2:
                             sethyphendict2(dwrite, rID, ritem)
                         elif not hlevel and not hyphentest(line):
                             print(lastIDs)
-                            if not tvar == 'description':
+                            tvarlist = ['description', 'skinDescription']
+                            if not tvar in tvarlist:
+                                if rID == 'skinDescription':
+                                    lastIDs.append(rID)
+                                    targetlevel += 4
                                 dwrite[rID] = ritem
                             else:
                                 dwrite += rID
-                                getLevelDict(lastIDs[0:len(lastIDs)-1],colitems)['description'] = dwrite
+                                getLevelDict(lastIDs[0:len(lastIDs)-1],colitems)[tvar] = dwrite
 
                 elif (readflag == 3):  ## reading blueprints
                     ## set target level and keyIDs
@@ -595,13 +603,16 @@ class Evedbimporter2:
 
                     targetlevel, lastIDs, hlevel = setkeyIDs2(lastIDs, lr, targetlevel, hlevel)
                     dwrite = getLevelDict(lastIDs, colitems)
+                    rIDlist = ['description','skinDescription']
                     tvar = ''
+                    tvarlist = ['description','recommendedFor','types','skinDescription']
                     if len(lastIDs) > 0:
                         tvar = lastIDs[len(lastIDs)-1]                    
-                    if ritem == '' and not rID == 'description' and not tvar == 'description' and not tvar == 'recommendedFor':
+                    if ritem == '' and not rID in rIDlist and not tvar in tvarlist:
                         lastIDs.append(rID)
                         dwrite[rID] = {}
-                        if rID == 'recommendedFor':
+                        rIDlist = ['recommendedFor', 'types']
+                        if rID in rIDlist:
                             targetlevel += 2
                         else:
                             targetlevel += 4
@@ -616,11 +627,15 @@ class Evedbimporter2:
                         elif hlevel and not hyphentest(line):
                             sethyphendict2(dwrite, rID, ritem)
                         elif not hlevel and not hyphentest(line):
-                            if not tvar == 'description':
+                            tvarlist = ['description', 'skinDescription']
+                            if not tvar in tvarlist:
                                 dwrite[rID] = ritem
+                                if rID == 'skinDescription':
+                                    lastIDs.append(rID)
+                                    targetlevel += 4
                             else:
                                 dwrite += rID
-                                getLevelDict(lastIDs[0:len(lastIDs)-1],colitems)['description'] = dwrite
+                                getLevelDict(lastIDs[0:len(lastIDs)-1],colitems)[tvar] = dwrite
                 elif (readflag == 3):  ## reading blueprints
                     ## set target level and keyIDs
 
@@ -730,7 +745,7 @@ class Evedbimporter2:
         filenames = self.getfiles()
         colids = []
         readlist = ['blueprints']
-        readlist2 = ['certificates']
+        readlist2 = ['certificates','skinLicenses','skinMaterials', 'skins']
         readlist3 = ['graphicIDs', 'iconIDs']
         readlist4 = ['groupIDs']
         for filename in filenames:
