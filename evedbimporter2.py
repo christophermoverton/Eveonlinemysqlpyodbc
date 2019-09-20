@@ -4,7 +4,7 @@ import pyodbc
 import logging
 
 importdir = "C:\\Users\\chris\\Downloads\\sde-20190625-TRANQUILITY (1)\\sde\\fsd\\"
-filestoadd = ['groupIDs.yaml']#'graphicIDs.yaml']#'certificates.yaml']#'blueprints.yaml']##"typeIDs.yaml"]
+filestoadd = ['iconIDs.yaml']#'groupIDs.yaml']#'graphicIDs.yaml']#'certificates.yaml']#'blueprints.yaml']##"typeIDs.yaml"]
 languagetoimport = "en"
 
 INISETTINGS = {'DIRPATH':importdir, 'BACKUPPATH': '',
@@ -526,7 +526,7 @@ class Evedbimporter2:
                             sethyphendict3(dwrite, rID, ritem)
                         elif not hlevel and not hyphentest(line):
                             if not tvar == 'description':
-                                tid = ['graphicFile', 'folder']
+                                tid = ['graphicFile', 'folder','iconFile']
                                 if rID in tid:
                                     ritem = line.split('\n')[0].split(':')[1].lstrip().strip()+':'+line.split('\n')[0].split(':')[2].lstrip().strip()
                                 dwrite[rID] = ritem
@@ -647,7 +647,7 @@ class Evedbimporter2:
                             sethyphendict3(dwrite, rID, ritem)
                         elif not hlevel and not hyphentest(line):
                             if not tvar == 'description':
-                                tid = ['graphicFile', 'folder']
+                                tid = ['graphicFile', 'folder', 'iconFile']
                                 if rID in tid:
                                 
                                     ritem = line.split('\n')[0].split(':')[1].lstrip().strip()+':'+line.split('\n')[0].split(':')[2].lstrip().strip()
@@ -731,7 +731,7 @@ class Evedbimporter2:
         colids = []
         readlist = ['blueprints']
         readlist2 = ['certificates']
-        readlist3 = ['graphicIDs']
+        readlist3 = ['graphicIDs', 'iconIDs']
         readlist4 = ['groupIDs']
         for filename in filenames:
             tbn = filename.split('\\')
