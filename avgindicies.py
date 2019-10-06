@@ -48,6 +48,38 @@ class Avgindices:
             typeIDs.append(row.typeID)
         return typeIDs
 
+    def getMaterialsPricing(self, smadict):
+        
+
+    def sma5(self, closeprices):
+        madict = {}
+        
+        for typeID in closeprices:
+            print(closeprices[typeID])
+            batches = closeprices[typeID]
+            batcheskeys_list=sorted(list(batches.keys()), reverse=True)
+            i = 0
+            suma = 0
+            madict[typeID] = {}
+            for bkey in batcheskeys_list:
+                j = i
+                suma = 0
+                p = 0
+                for k in range(0,4):
+                    j = k + i
+                    if j > len(batcheskeys_list)-1:
+                        break
+                    suma += batches[batcheskeys_list[j]]['close']
+                    p = k
+                i += 1
+                # if i > 5:
+                #     break
+                if p == 0:
+                    madict[typeID][bkey]  = 0
+                    continue
+                madict[typeID][bkey] = suma/p
+        print(madict)
+
     def getcloseprices(self):
         def convertSQLDateTimeToTimestamp(value):
             return time.mktime(time.strptime(value, '%Y-%m-%d %H:%M:%S'))
@@ -58,7 +90,7 @@ class Avgindices:
             biddict = {}
             sqlqueryline = ''
             sqlqueryline = 'SELECT price, '
-            sqlqueryline += 'typeID, unix_timestamp(batchDate) as bd, orderID, volRemaining FROM reactionmaterialsindex'
+            sqlqueryline += 'typeID, unix_timestamp(batchDate) as bd, orderID, volRemaining, volEntered FROM reactionmaterialsindex'
             sqlqueryline += ' WHERE (volEntered - volRemaining) > 0' ## and bid & 1 = 1'
             sqlqueryline += ' and batchDate BETWEEN CURRENT_TIMESTAMP'
             sqlqueryline += '- INTERVAL 90 DAY and issueDate - CURRENT_TIMESTAMP'
@@ -71,17 +103,19 @@ class Avgindices:
             for row in rows:
                 if (row.orderID not in prices):
                     batches = {}
-                    batches[str(row.bd)] = {'price': row.price, 'batchDate': row.bd, 'volRemaining': row.volRemaining}
+                    batches[str(row.bd)] = {'price': row.price, 'batchDate': row.bd, 'volRemaining': row.volRemaining,
+                                             'volEntered': row.volEntered}
                     prices[row.orderID] = batches
                 else:
-                    prices[row.orderID][str(row.bd)] = {'price': row.price, 'batchDate': row.bd, 'volRemaining': row.volRemaining}
+                    prices[row.orderID][str(row.bd)] = {'price': row.price, 'batchDate': row.bd, 'volRemaining': row.volRemaining,
+                                                         'volEntered': row.volEntered}
             nbatches = {}                                                   
             for orderID in prices:
                 batches = prices[orderID]
                 i = 0
                 batches_list=list(batches.values())
-                batcheskeys_list=list(batches.keys())
-                for val in batches:
+                batcheskeys_list=sorted(list(batches.keys()))
+                for val in batcheskeys_list:
                     tsum = 0
                     tvol = 0  
                     if i == 0:
@@ -89,6 +123,7 @@ class Avgindices:
                         continue
                     vol1 = batches[val]['volRemaining']
                     vol2 = batches_list[i-1]['volRemaining']
+                    vol3 = batches[val]['volEntered']
                     if (vol1-vol2 > 0):
                         volDiff = vol1-vol2
                         tvol += volDiff
@@ -101,7 +136,19 @@ class Avgindices:
                         else:
                             nprices = nbatches[bkey]
                             nprices[orderID] = {'tvol': tvol, 'tsum': tsum}
-                    i+=1;    
+                    else:
+                        volDiff = vol3-vol1
+                        tvol += volDiff
+                        tsum = batches[val]['price']*volDiff
+                        bkey = batcheskeys_list[i]
+                        if (bkey not in nbatches):
+                            nprices = {}
+                            nprices[orderID] = {'tvol': tvol, 'tsum': tsum}
+                            nbatches[bkey] = nprices
+                        else:
+                            nprices = nbatches[bkey]
+                            nprices[orderID] = {'tvol': tvol, 'tsum': tsum}                        
+                    i+=1    
            ## tsum = tsum / tvol
             nbatchclose = {}
             for bkey in nbatches:
@@ -179,6 +226,7 @@ class Avgindices:
             ##biddict['sell'] = prices
             ##typeIDdict[typeID] = biddict       
         print(aprices)
+        return aprices
 
     def gettopprices(self):
         typeIDs = self.getdistincttypeIDs()
@@ -235,7 +283,7 @@ class Avgindices:
         return avgontypeIDdict
 
     def getcloseindices(self):
-        self.getcloseprices()
+        return self.getcloseprices()
                 
         
     def getsetindices(self):
@@ -265,7 +313,7 @@ class Avgindices:
             
     def __init__(self, cursor = '', cnxn = ''):
         if cursor == '':
-            self.cnxn = pyodbc.connect('DRIVER={MySQL ODBC 3.51 Driver};SERVER=localhost;DATABASE=testdb;UID=root;PWD=admin')
+            self.cnxn = pyodbc.connect('DRIVER={MySQL ODBC 3.51 Driver};SERVER=localhost;DATABASE=testdb;UID=root;PWD=youpassword')
             #pyodbc.connect('DRIVER={SQL Server};SERVER=CHRISTOPHER-PC\SQLEXPRESS;DATABASE=Eve;UID=shcooper;PWD=password')
             self.cursor = self.cnxn.cursor()
         else:
@@ -273,5 +321,7 @@ class Avgindices:
             self.cnxn = cnxn
 
 avgindices = Avgindices()
-avgindices.getcloseindices()
+closeprices = avgindices.getcloseindices()
+
+avgindices.sma5(closeprices)
 ##avgindices.getsetindices()
