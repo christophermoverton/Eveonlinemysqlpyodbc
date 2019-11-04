@@ -49,7 +49,34 @@ class Avgindices:
         return typeIDs
 
     def getMaterialsPricing(self, smadict):
-        
+        sqlquery = ''        
+        sqlquery += 'SELECT b.name, b.typeID, a.quantity, a.materialTypeID '
+        sqlquery += '' 
+        sqlquery += 'FROM invTypeMaterials a, typeids b WHERE '
+        sqlquery += 'b.typeID = a.typeID; '
+        self.cursor.execute(sqlquery)
+        rows = self.cursor.fetchall()
+        pricedict = {}
+        print(rows[0:1000])
+        for row in rows:
+            if str(row.typeID) not in pricedict:
+                kv = str(row.typeID)
+                mk = row.materialTypeID
+                print(mk)
+                if mk in smadict:
+                    cprices = smadict[mk]
+                    cprice = cprices[list(cprices.keys())[0]]
+                    pricedict[kv] = {'price': row.quantity*cprice, 'name': row.name}
+                # else:
+                #     pricedict[kv] = {'price': 0, 'name': row.name}
+            else:
+                kv = str(row.typeID)
+                mk = row.materialTypeID
+                if mk in smadict:
+                    cprices = smadict[mk]
+                    cprice = cprices[list(cprices.keys())[0]]
+                    pricedict[kv]['price'] += row.quantity*cprice 
+        print(pricedict)
 
     def sma5(self, closeprices):
         madict = {}
@@ -78,7 +105,9 @@ class Avgindices:
                     madict[typeID][bkey]  = 0
                     continue
                 madict[typeID][bkey] = suma/p
+        
         print(madict)
+        return madict
 
     def getcloseprices(self):
         def convertSQLDateTimeToTimestamp(value):
@@ -323,5 +352,6 @@ class Avgindices:
 avgindices = Avgindices()
 closeprices = avgindices.getcloseindices()
 
-avgindices.sma5(closeprices)
+avgpdict = avgindices.sma5(closeprices)
+avgindices.getMaterialsPricing(avgpdict)
 ##avgindices.getsetindices()
